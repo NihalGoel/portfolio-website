@@ -15,9 +15,9 @@ import HomeLayout from '../layouts/HomeLayout.astro';
 
   <div class="banner-wrapper">
     <div class="banner">
-      <video autoplay muted loop playsinline poster="/images/placeholder-1.svg">
-        <!-- Replace with actual video file -->
-      </video>
+      <div class="banner__iframe-wrap">
+        <div id="yt-player"></div>
+      </div>
     </div>
   </div>
 </HomeLayout>
@@ -62,28 +62,36 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem 3rem;
     min-height: calc(100vh - 80px);
   }
 
   .banner {
     width: 100%;
     aspect-ratio: 25 / 9;
-    max-height: 33vh;
-    border-radius: 4px;
     overflow: hidden;
     box-shadow:
       0 -4px 6px rgba(255, 255, 255, 0.25),
-      0 6px 12px rgba(0, 0, 0, 0.3),
+      0 8px 16px rgba(0, 0, 0, 0.3),
       0 2px 4px rgba(0, 0, 0, 0.15);
     background: #999;
   }
 
-  .banner video {
+  .banner__iframe-wrap {
+    position: relative;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    display: block;
+    overflow: hidden;
+  }
+
+  .banner__iframe-wrap :global(iframe) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300%;
+    height: 300%;
+    border: none;
+    pointer-events: none;
   }
 
   @media (max-width: 768px) {
@@ -98,7 +106,74 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     }
 
     .banner-wrapper {
-      padding: 1rem 1.5rem;
+      padding: 0;
     }
   }
 </style>
+
+<script>
+  const START_TIME = 60;
+  const END_TIME = 70;
+
+  function loadYTPlayer() {
+    const existing = document.getElementById('yt-player');
+    if (!existing) return;
+
+    // @ts-ignore
+    if (window.YT && window.YT.Player) {
+      createPlayer();
+    } else {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+      // @ts-ignore
+      window.onYouTubeIframeAPIReady = createPlayer;
+    }
+  }
+
+  function createPlayer() {
+    // @ts-ignore
+    new window.YT.Player('yt-player', {
+      videoId: 'YgEOH2hP6cg',
+      playerVars: {
+        autoplay: 1,
+        mute: 1,
+        controls: 0,
+        showinfo: 0,
+        rel: 0,
+        modestbranding: 1,
+        playsinline: 1,
+        start: START_TIME,
+        disablekb: 1,
+        fs: 0,
+        iv_load_policy: 3,
+      },
+      events: {
+        onReady: (e: any) => {
+          e.target.seekTo(START_TIME, true);
+          e.target.playVideo();
+        },
+        onStateChange: (e: any) => {
+          // @ts-ignore
+          if (e.data === window.YT.PlayerState.PLAYING) {
+            checkLoop(e.target);
+          }
+        },
+      },
+    });
+  }
+
+  function checkLoop(player: any) {
+    const interval = setInterval(() => {
+      const time = player.getCurrentTime();
+      if (time >= END_TIME || time < START_TIME) {
+        player.seekTo(START_TIME, true);
+      }
+    }, 200);
+    // Clean up on navigation
+    document.addEventListener('astro:before-preparation', () => clearInterval(interval), { once: true });
+  }
+
+  loadYTPlayer();
+  document.addEventListener('astro:page-load', loadYTPlayer);
+</script>
