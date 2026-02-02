@@ -1,0 +1,63 @@
+---
+const email = 'studio@elenavasquez.com';
+---
+
+<div class="contact-block">
+  <p class="contact-block__intro">
+    For inquiries regarding exhibitions, commissions, screenings, or press,<br />
+    please reach out directly.
+  </p>
+  <a href={`mailto:${email}`} class="contact-block__email" data-cursor-hover>
+    {email}
+  </a>
+  <div class="contact-block__socials">
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <a href="https://vimeo.com" target="_blank" rel="noopener noreferrer">Vimeo</a>
+  </div>
+</div>
+
+<style>
+  .contact-block {
+    max-width: 600px;
+  }
+
+  .contact-block__intro {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    opacity: 0.7;
+    margin-bottom: 2rem;
+  }
+
+  .contact-block__email {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-muted);
+    padding-bottom: 0.25rem;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+    display: inline-block;
+  }
+
+  .contact-block__email:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .contact-block__socials {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .contact-block__socials a {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+  }
+
+  .contact-block__socials a:hover {
+    opacity: 1;
+  }
+</style>

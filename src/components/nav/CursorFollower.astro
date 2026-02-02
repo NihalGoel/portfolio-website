@@ -1,0 +1,88 @@
+---
+---
+<div class="cursor" id="custom-cursor" aria-hidden="true">
+  <div class="cursor__dot"></div>
+</div>
+
+<style>
+  .cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+    pointer-events: none;
+    mix-blend-mode: difference;
+    will-change: transform;
+  }
+
+  .cursor__dot {
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--color-text);
+    border-radius: 50%;
+    transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, background-color 0.2s ease;
+  }
+
+  .cursor.is-hovering .cursor__dot {
+    width: 40px;
+    height: 40px;
+    margin-top: -14px;
+    margin-left: -14px;
+    background: rgba(232, 228, 223, 0.08);
+  }
+
+  @media (pointer: coarse) {
+    .cursor {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function initCursor() {
+    const cursor = document.getElementById('custom-cursor');
+    if (!cursor || window.matchMedia('(pointer: coarse)').matches) return;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animate() {
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Expand on interactive elements
+    const hoverTargets = 'a, button, [role="button"], input, textarea, [data-cursor-hover]';
+
+    document.addEventListener('mouseover', (e) => {
+      if ((e.target as Element).closest?.(hoverTargets)) {
+        cursor.classList.add('is-hovering');
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      if ((e.target as Element).closest?.(hoverTargets)) {
+        cursor.classList.remove('is-hovering');
+      }
+    });
+  }
+
+  initCursor();
+  document.addEventListener('astro:after-swap', initCursor);
+</script>

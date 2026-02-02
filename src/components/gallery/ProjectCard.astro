@@ -1,0 +1,89 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  thumbnail: string;
+  slug: string;
+  medium: string;
+  date: string;
+  featured?: boolean;
+}
+
+const { title, description, thumbnail, slug, medium, date, featured = false } = Astro.props;
+---
+
+<a href={`/work/${slug}`} class:list={['project-card', { 'project-card--featured': featured }]} data-cursor-hover>
+  <div class="project-card__image">
+    <img src={thumbnail} alt={title} loading="lazy" />
+  </div>
+  <div class="project-card__overlay">
+    <span class="project-card__date">{date}</span>
+    <h3 class="project-card__title">{title}</h3>
+    <p class="project-card__medium">{medium}</p>
+  </div>
+</a>
+
+<style>
+  .project-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--color-surface);
+    aspect-ratio: 4 / 5;
+  }
+
+  .project-card--featured {
+    aspect-ratio: 3 / 4;
+  }
+
+  .project-card__image {
+    width: 100%;
+    height: 100%;
+    transition: transform var(--transition-smooth);
+  }
+
+  .project-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-card:hover .project-card__image {
+    transform: scale(1.05) translateY(-8px);
+  }
+
+  .project-card__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 1.5rem;
+    background: linear-gradient(transparent, rgba(10, 10, 10, 0.9));
+    transform: translateY(calc(100% - 4rem));
+    transition: transform var(--transition-smooth);
+  }
+
+  .project-card:hover .project-card__overlay {
+    transform: translateY(0);
+  }
+
+  .project-card__date {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .project-card__title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-card__medium {
+    font-size: 0.85rem;
+    opacity: 0.6;
+  }
+</style>

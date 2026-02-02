@@ -1,0 +1,128 @@
+---
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/work', label: 'Work' },
+  { href: '/film', label: 'Film' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!-- The Slit: thin luminous line that expands on hover -->
+<nav class="side-panel" id="side-panel" aria-label="Main navigation">
+  <div class="side-panel__slit"></div>
+  <div class="side-panel__content">
+    <ul class="side-panel__links">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={['side-panel__link', { 'is-active': currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) }]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .side-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--nav-width);
+    z-index: 1000;
+    pointer-events: none;
+    transform: translateX(calc(-1 * var(--nav-width) + 3px));
+    transition: transform var(--transition-smooth);
+  }
+
+  /* Hover zone: invisible area to detect cursor approach */
+  .side-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -40px;
+    width: 40px;
+    height: 100%;
+    pointer-events: auto;
+  }
+
+  .side-panel:hover,
+  .side-panel:focus-within {
+    transform: translateX(0);
+  }
+
+  .side-panel:hover .side-panel__slit,
+  .side-panel:focus-within .side-panel__slit {
+    opacity: 0;
+  }
+
+  .side-panel__slit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--color-accent) 20%,
+      var(--color-text) 50%,
+      var(--color-accent) 80%,
+      transparent 100%
+    );
+    opacity: 0.6;
+    transition: opacity var(--transition-smooth);
+    pointer-events: auto;
+  }
+
+  .side-panel__content {
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    padding: 2rem 3rem;
+    pointer-events: auto;
+    border-right: 1px solid rgba(232, 228, 223, 0.06);
+  }
+
+  .side-panel__links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .side-panel__link {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--color-text);
+    opacity: 0.5;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    display: inline-block;
+  }
+
+  .side-panel__link:hover {
+    opacity: 1;
+    color: var(--color-text);
+    transform: translateX(8px);
+  }
+
+  .side-panel__link.is-active {
+    opacity: 1;
+    color: var(--color-accent);
+  }
+
+  /* Mobile: hide side panel, use bottom bar instead */
+  @media (max-width: 768px) {
+    .side-panel {
+      display: none;
+    }
+  }
+</style>

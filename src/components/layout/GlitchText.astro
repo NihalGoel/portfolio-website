@@ -1,0 +1,69 @@
+---
+interface Props {
+  text: string;
+  tag?: string;
+  class?: string;
+}
+
+const { text, tag: Tag = 'span', class: className = '' } = Astro.props;
+---
+
+<span class:list={['glitch', className]} data-text={text} aria-label={text}>
+  {text}
+</span>
+
+<style>
+  .glitch {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-display);
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .glitch::before {
+    color: var(--color-accent);
+    clip-path: inset(0 0 65% 0);
+    animation: glitch-top 3s infinite linear alternate-reverse;
+  }
+
+  .glitch::after {
+    color: var(--color-text);
+    clip-path: inset(60% 0 0 0);
+    animation: glitch-bottom 2.5s infinite linear alternate-reverse;
+  }
+
+  @keyframes glitch-top {
+    0%, 95% { transform: translate(0); }
+    96% { transform: translate(-3px, -1px); }
+    97% { transform: translate(2px, 1px); }
+    98% { transform: translate(-1px, 0); }
+    99% { transform: translate(1px, -1px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes glitch-bottom {
+    0%, 94% { transform: translate(0); }
+    95% { transform: translate(2px, 1px); }
+    96% { transform: translate(-3px, 0); }
+    97% { transform: translate(1px, -1px); }
+    98% { transform: translate(-1px, 1px); }
+    100% { transform: translate(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glitch::before,
+    .glitch::after {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,193 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import VideoEmbed from '../components/video/VideoEmbed.astro';
+import Lightbox from '../components/gallery/Lightbox.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  duration: string;
+  format?: string;
+  videoId: string;
+  videoPlatform: 'vimeo' | 'youtube';
+  thumbnail: string;
+  stills: string[];
+  credits: { role: string; name: string }[];
+  screenings: { festival: string; year: string; note?: string }[];
+}
+
+const {
+  title, description, date, duration, format,
+  videoId, videoPlatform, thumbnail, stills, credits, screenings
+} = Astro.props;
+---
+
+<BaseLayout title={`${title} — Elena Vasquez`} description={description}>
+  <article class="film-detail container">
+    <header class="film-detail__header">
+      <span class="film-detail__date">{date} · {duration}{format ? ` · ${format}` : ''}</span>
+      <h1>{title}</h1>
+    </header>
+
+    <VideoEmbed videoId={videoId} platform={videoPlatform} title={title} thumbnail={thumbnail} />
+
+    <div class="film-detail__body">
+      <slot />
+    </div>
+
+    {stills.length > 0 && (
+      <section class="film-detail__stills">
+        <h2>Stills</h2>
+        <Lightbox images={stills} title={title} />
+      </section>
+    )}
+
+    {credits.length > 0 && (
+      <section class="film-detail__credits">
+        <h2>Credits</h2>
+        <dl>
+          {credits.map((c) => (
+            <div class="credit-row">
+              <dt>{c.role}</dt>
+              <dd>{c.name}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    )}
+
+    {screenings.length > 0 && (
+      <section class="film-detail__screenings">
+        <h2>Screenings</h2>
+        <ul>
+          {screenings.map((s) => (
+            <li>
+              <span class="screening-year">{s.year}</span>
+              <span class="screening-festival">{s.festival}</span>
+              {s.note && <span class="screening-note">{s.note}</span>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <nav class="film-detail__back">
+      <a href="/film" data-cursor-hover>&larr; All Films</a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .film-detail {
+    padding: 8rem 0 4rem;
+    max-width: 960px;
+  }
+
+  .film-detail__header {
+    margin-bottom: 2rem;
+  }
+
+  .film-detail__date {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .film-detail__header h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .film-detail__body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin: 3rem 0;
+  }
+
+  .film-detail__body :global(p) {
+    margin-bottom: 1.5rem;
+  }
+
+  .film-detail__stills,
+  .film-detail__credits,
+  .film-detail__screenings {
+    margin: 3rem 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(232, 228, 223, 0.08);
+  }
+
+  .film-detail__stills h2,
+  .film-detail__credits h2,
+  .film-detail__screenings h2 {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-body);
+    font-weight: 400;
+    opacity: 0.5;
+  }
+
+  .film-detail__credits dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem 2rem;
+  }
+
+  .credit-row {
+    display: contents;
+  }
+
+  .credit-row dt {
+    font-size: 0.85rem;
+    opacity: 0.5;
+  }
+
+  .credit-row dd {
+    font-size: 0.85rem;
+  }
+
+  .film-detail__screenings ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .film-detail__screenings li {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .screening-year {
+    opacity: 0.4;
+    min-width: 3rem;
+  }
+
+  .screening-note {
+    opacity: 0.4;
+    font-style: italic;
+  }
+
+  .film-detail__back {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(232, 228, 223, 0.08);
+  }
+
+  .film-detail__back a {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+  }
+
+  .film-detail__back a:hover {
+    opacity: 1;
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Lightbox from '../components/gallery/Lightbox.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  medium: string;
+  dimensions?: string;
+  location?: string;
+  images: string[];
+}
+
+const { title, description, date, medium, dimensions, location, images } = Astro.props;
+---
+
+<BaseLayout title={`${title} — Elena Vasquez`} description={description}>
+  <article class="project-detail container">
+    <header class="project-detail__header">
+      <span class="project-detail__date">{date}</span>
+      <h1>{title}</h1>
+      <div class="project-detail__meta">
+        <span>{medium}</span>
+        {dimensions && <span>{dimensions}</span>}
+        {location && <span>{location}</span>}
+      </div>
+    </header>
+
+    <div class="project-detail__body">
+      <slot />
+    </div>
+
+    <Lightbox images={images} title={title} />
+
+    <nav class="project-detail__back">
+      <a href="/work" data-cursor-hover>&larr; All Work</a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-detail {
+    padding: 8rem 0 4rem;
+    max-width: 900px;
+  }
+
+  .project-detail__header {
+    margin-bottom: 3rem;
+  }
+
+  .project-detail__date {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .project-detail__header h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .project-detail__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+    opacity: 0.6;
+  }
+
+  .project-detail__meta span::before {
+    content: '·';
+    margin-right: 1.5rem;
+  }
+
+  .project-detail__meta span:first-child::before {
+    display: none;
+  }
+
+  .project-detail__body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+
+  .project-detail__body :global(p) {
+    margin-bottom: 1.5rem;
+  }
+
+  .project-detail__body :global(em) {
+    font-style: italic;
+  }
+
+  .project-detail__back {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(232, 228, 223, 0.08);
+  }
+
+  .project-detail__back a {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+  }
+
+  .project-detail__back a:hover {
+    opacity: 1;
+  }
+</style>

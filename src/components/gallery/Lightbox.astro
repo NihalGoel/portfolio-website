@@ -1,0 +1,177 @@
+---
+interface Props {
+  images: string[];
+  title: string;
+}
+
+const { images, title } = Astro.props;
+---
+
+{images.length > 0 && (
+  <div class="lightbox-gallery">
+    {images.map((img, i) => (
+      <button class="lightbox-trigger" data-lightbox-index={i} data-cursor-hover>
+        <img src={img} alt={`${title}, image ${i + 1}`} loading="lazy" />
+      </button>
+    ))}
+  </div>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
+    <button class="lightbox__close" aria-label="Close lightbox">&times;</button>
+    <button class="lightbox__prev" aria-label="Previous image">&larr;</button>
+    <button class="lightbox__next" aria-label="Next image">&rarr;</button>
+    <div class="lightbox__content">
+      <img class="lightbox__img" id="lightbox-img" src="" alt="" />
+    </div>
+    <div class="lightbox__counter" id="lightbox-counter"></div>
+  </div>
+)}
+
+<style>
+  .lightbox-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .lightbox-trigger {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--color-surface);
+  }
+
+  .lightbox-trigger img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-smooth);
+  }
+
+  .lightbox-trigger:hover img {
+    transform: scale(1.05);
+  }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    background: rgba(10, 10, 10, 0.97);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+  }
+
+  .lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .lightbox__content {
+    max-width: 90vw;
+    max-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox__img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    color: var(--color-text);
+    z-index: 1;
+  }
+
+  .lightbox__prev,
+  .lightbox__next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    color: var(--color-text);
+    padding: 1rem;
+    z-index: 1;
+  }
+
+  .lightbox__prev { left: 1rem; }
+  .lightbox__next { right: 1rem; }
+
+  .lightbox__counter {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+</style>
+
+<script>
+  function initLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+    const counter = document.getElementById('lightbox-counter');
+    const triggers = document.querySelectorAll('.lightbox-trigger');
+    if (!lightbox || !lightboxImg || !triggers.length) return;
+
+    const images: string[] = [];
+    triggers.forEach((t) => {
+      const img = t.querySelector('img');
+      if (img) images.push(img.src);
+    });
+
+    let current = 0;
+
+    function show(index: number) {
+      current = ((index % images.length) + images.length) % images.length;
+      lightboxImg.src = images[current];
+      lightboxImg.alt = `Image ${current + 1} of ${images.length}`;
+      if (counter) counter.textContent = `${current + 1} / ${images.length}`;
+      lightbox!.classList.add('is-open');
+      lightbox!.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+      lightbox!.classList.remove('is-open');
+      lightbox!.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    triggers.forEach((t) => {
+      t.addEventListener('click', () => {
+        const idx = parseInt(t.getAttribute('data-lightbox-index') || '0');
+        show(idx);
+      });
+    });
+
+    lightbox.querySelector('.lightbox__close')?.addEventListener('click', close);
+    lightbox.querySelector('.lightbox__prev')?.addEventListener('click', () => show(current - 1));
+    lightbox.querySelector('.lightbox__next')?.addEventListener('click', () => show(current + 1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('is-open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+  }
+
+  initLightbox();
+  document.addEventListener('astro:after-swap', initLightbox);
+</script>

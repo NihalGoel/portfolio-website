@@ -1,0 +1,83 @@
+{
+  "name": "Elena Vasquez",
+  "tagline": "Filmmaker · Visual Artist · Installation",
+  "bio": "Elena Vasquez is a multidisciplinary artist working at the intersection of moving image, sculpture, and spatial installation. Her practice investigates the liminal spaces between memory and architecture, exploring how physical environments shape subjective experience. Working primarily with 16mm film, found materials, and site-specific intervention, her work has been exhibited internationally in galleries, museums, and film festivals.",
+  "education": [
+    {
+      "degree": "MFA Sculpture & Expanded Media",
+      "institution": "Yale School of Art",
+      "year": "2018"
+    },
+    {
+      "degree": "BFA Film & Video",
+      "institution": "California Institute of the Arts",
+      "year": "2014"
+    }
+  ],
+  "exhibitions": [
+    {
+      "title": "Thresholds",
+      "venue": "Serpentine Gallery, London",
+      "year": "2024",
+      "type": "solo"
+    },
+    {
+      "title": "Between Walls",
+      "venue": "MoMA PS1, New York",
+      "year": "2023",
+      "type": "solo"
+    },
+    {
+      "title": "Echoes of Structure",
+      "venue": "Venice Biennale",
+      "year": "2023",
+      "type": "group"
+    },
+    {
+      "title": "Residual Light",
+      "venue": "Palais de Tokyo, Paris",
+      "year": "2022",
+      "type": "group"
+    },
+    {
+      "title": "Hollow Ground",
+      "venue": "Kunsthalle Basel",
+      "year": "2021",
+      "type": "solo"
+    }
+  ],
+  "screenings": [
+    {
+      "title": "Dissolve",
+      "festival": "Rotterdam International Film Festival",
+      "year": "2024"
+    },
+    {
+      "title": "Afterimage",
+      "festival": "New York Film Festival — Projections",
+      "year": "2023"
+    },
+    {
+      "title": "Structure of Forgetting",
+      "festival": "Berlinale Forum Expanded",
+      "year": "2022"
+    }
+  ],
+  "press": [
+    {
+      "publication": "Artforum",
+      "title": "Elena Vasquez: The Architecture of Absence",
+      "year": "2024"
+    },
+    {
+      "publication": "Frieze",
+      "title": "New Voices in Expanded Cinema",
+      "year": "2023"
+    },
+    {
+      "publication": "BOMB Magazine",
+      "title": "Interview: Elena Vasquez on Space and Memory",
+      "year": "2022"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Head from '../components/common/Head.astro';
+import Grain from '../components/common/Grain.astro';
+import Loader from '../components/common/Loader.astro';
+import SidePanel from '../components/nav/SidePanel.astro';
+import NavToggle from '../components/nav/NavToggle.astro';
+import CursorFollower from '../components/nav/CursorFollower.astro';
+
+import '../styles/global.css';
+import '../styles/grain.css';
+import '../styles/transitions.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description, image } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head title={title} description={description} image={image} />
+    <ClientRouter />
+  </head>
+  <body>
+    <Loader />
+    <Grain />
+    <CursorFollower />
+    <SidePanel />
+    <NavToggle />
+
+    <main class="page-content" transition:name="page-content" transition:animate="slide">
+      <slot />
+    </main>
+  </body>
+</html>

@@ -1,0 +1,232 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionReveal from '../components/layout/SectionReveal.astro';
+import cv from '../data/cv.json';
+---
+
+<BaseLayout title="About — Elena Vasquez">
+  <section class="about-page container">
+    <div class="about-split">
+      <div class="about-split__text">
+        <header>
+          <h1>{cv.name}</h1>
+          <p class="about-tagline">{cv.tagline}</p>
+        </header>
+
+        <div class="about-bio">
+          <p>{cv.bio}</p>
+        </div>
+
+        <!-- Education -->
+        <SectionReveal>
+          <div class="cv-section">
+            <h2>Education</h2>
+            {cv.education.map((ed) => (
+              <div class="cv-row">
+                <span class="cv-year">{ed.year}</span>
+                <div>
+                  <strong>{ed.degree}</strong>
+                  <span class="cv-sub">{ed.institution}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </SectionReveal>
+
+        <!-- Exhibitions -->
+        <SectionReveal>
+          <div class="cv-section">
+            <h2>Selected Exhibitions</h2>
+            {cv.exhibitions.map((ex) => (
+              <div class="cv-row">
+                <span class="cv-year">{ex.year}</span>
+                <div>
+                  <strong>{ex.title}</strong>
+                  <span class="cv-sub">{ex.venue}</span>
+                  <span class="cv-tag">{ex.type}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </SectionReveal>
+
+        <!-- Screenings -->
+        <SectionReveal>
+          <div class="cv-section">
+            <h2>Screenings</h2>
+            {cv.screenings.map((sc) => (
+              <div class="cv-row">
+                <span class="cv-year">{sc.year}</span>
+                <div>
+                  <strong>{sc.title}</strong>
+                  <span class="cv-sub">{sc.festival}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </SectionReveal>
+
+        <!-- Press -->
+        <SectionReveal>
+          <div class="cv-section">
+            <h2>Press</h2>
+            {cv.press.map((pr) => (
+              <div class="cv-row">
+                <span class="cv-year">{pr.year}</span>
+                <div>
+                  <strong>{pr.title}</strong>
+                  <span class="cv-sub">{pr.publication}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </SectionReveal>
+      </div>
+
+      <div class="about-split__photos">
+        <div class="photo-stack">
+          <img src="/images/placeholder-1.svg" alt="Studio photograph 1" loading="lazy" />
+          <img src="/images/placeholder-2.svg" alt="Studio photograph 2" loading="lazy" />
+          <img src="/images/placeholder-3.svg" alt="Studio photograph 3" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding: 8rem 0 4rem;
+  }
+
+  .about-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-split__text header {
+    margin-bottom: 3rem;
+  }
+
+  .about-split__text h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .about-tagline {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+  }
+
+  .about-bio {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    opacity: 0.8;
+  }
+
+  /* CV Sections */
+  .cv-section {
+    margin-bottom: 3rem;
+  }
+
+  .cv-section h2 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-family: var(--font-body);
+    font-weight: 400;
+    opacity: 0.4;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(232, 228, 223, 0.08);
+  }
+
+  .cv-row {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .cv-year {
+    opacity: 0.35;
+    font-size: 0.8rem;
+    padding-top: 0.15rem;
+  }
+
+  .cv-sub {
+    display: block;
+    opacity: 0.5;
+    font-size: 0.8rem;
+    margin-top: 0.15rem;
+  }
+
+  .cv-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.3;
+    margin-top: 0.25rem;
+  }
+
+  /* Photo stack with crossfade */
+  .about-split__photos {
+    position: sticky;
+    top: 8rem;
+  }
+
+  .photo-stack {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .photo-stack img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    animation: crossfade 12s infinite;
+  }
+
+  .photo-stack img:nth-child(1) { animation-delay: 0s; }
+  .photo-stack img:nth-child(2) { animation-delay: 4s; }
+  .photo-stack img:nth-child(3) { animation-delay: 8s; }
+
+  @keyframes crossfade {
+    0%, 25% { opacity: 1; }
+    33%, 92% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    .about-split {
+      grid-template-columns: 1fr;
+    }
+
+    .about-split__photos {
+      position: relative;
+      top: 0;
+      order: -1;
+      max-height: 50vh;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-stack img {
+      animation: none;
+    }
+    .photo-stack img:first-child {
+      opacity: 1;
+    }
+  }
+</style>
