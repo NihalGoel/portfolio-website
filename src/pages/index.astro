@@ -2,9 +2,9 @@
 import HomeLayout from '../layouts/HomeLayout.astro';
 ---
 
-<HomeLayout title="Elena Vasquez — Filmmaker · Visual Artist · Installation">
+<HomeLayout title="Nihal Goel — Filmmaker · Visual Artist · Installation">
   <nav class="nav">
-    <a href="/" class="nav__name">Elena Vasquez</a>
+    <a href="/" class="nav__name">Nihal Goel</a>
     <div class="nav__links">
       <a href="/work" class="nav__link">Work</a>
       <a href="/film" class="nav__link">Film</a>
@@ -31,11 +31,13 @@ import HomeLayout from '../layouts/HomeLayout.astro';
   }
 
   .nav__name {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
     color: #e8e4df;
     text-decoration: none;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
   .nav__links {
@@ -44,9 +46,9 @@ import HomeLayout from '../layouts/HomeLayout.astro';
   }
 
   .nav__link {
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 400;
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 300;
     color: #e8e4df;
     text-decoration: none;
     text-transform: uppercase;
@@ -70,7 +72,7 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     aspect-ratio: 25 / 9;
     overflow: hidden;
     box-shadow:
-      0 -4px 6px rgba(255, 255, 255, 0.25),
+      0 -8px 16px rgba(0, 0, 0, 0.3),
       0 8px 16px rgba(0, 0, 0, 0.3),
       0 2px 4px rgba(0, 0, 0, 0.15);
     background: #999;
