@@ -7,9 +7,7 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     <a href="/" class="nav__name">Nihal Goel</a>
     <div class="nav__links">
       <a href="/work" class="nav__link">Work</a>
-      <a href="/film" class="nav__link">Film</a>
       <a href="/about" class="nav__link">About</a>
-      <a href="/contact" class="nav__link">Contact</a>
     </div>
   </nav>
 
@@ -53,11 +51,20 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    transition: opacity 0.2s ease;
+    display: inline-flex;
+    flex-direction: row;
+    position: relative;
   }
 
-  .nav__link:hover {
-    opacity: 0.6;
+  .nav__link :global(.letter) {
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                opacity 0.4s ease;
+    transition-delay: var(--delay);
+  }
+
+  .nav__link.is-vertical :global(.letter) {
+    transform: translateX(var(--collapse-x)) translateY(var(--offset));
   }
 
   .banner-wrapper {
@@ -178,4 +185,31 @@ import HomeLayout from '../layouts/HomeLayout.astro';
 
   loadYTPlayer();
   document.addEventListener('astro:page-load', loadYTPlayer);
+
+  // Nav link vertical hover effect
+  function initNavHover() {
+    document.querySelectorAll('.nav__link').forEach((link) => {
+      if (link.querySelector('.letter')) return;
+      const text = link.textContent || '';
+      const letters = text.split('');
+      const lineHeight = 1.5; // em per stacked letter
+
+      link.innerHTML = letters
+        .map((ch, i) => {
+          // Each letter needs to move left to the first letter's position
+          // and down by its index * line height
+          const collapseX = -i * 0.85 + 'em';
+          const offsetY = i * lineHeight + 'em';
+          const delay = i * 30 + 'ms';
+          return `<span class="letter" style="--collapse-x:${collapseX};--offset:${offsetY};--delay:${delay}">${ch}</span>`;
+        })
+        .join('');
+
+      link.addEventListener('mouseenter', () => link.classList.add('is-vertical'));
+      link.addEventListener('mouseleave', () => link.classList.remove('is-vertical'));
+    });
+  }
+
+  initNavHover();
+  document.addEventListener('astro:page-load', initNavHover);
 </script>
