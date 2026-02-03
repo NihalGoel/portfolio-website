@@ -1,8 +1,33 @@
 ---
 import HomeLayout from '../layouts/HomeLayout.astro';
+
+const projects = [
+  {
+    id: 'project-1',
+    title: 'Project Title One',
+    year: '2024',
+    medium: 'Film, 12 min',
+    description: 'A meditation on solitude and the weight of landscape.',
+  },
+  {
+    id: 'project-2',
+    title: 'Project Title Two',
+    year: '2023',
+    medium: 'Installation',
+    description: 'An immersive work exploring thresholds between physical exertion and stillness.',
+  },
+  {
+    id: 'project-3',
+    title: 'Project Title Three',
+    year: '2023',
+    medium: 'Film, 8 min',
+    description: 'Documentary exploring the relationship between body and environment.',
+  },
+];
 ---
 
 <HomeLayout title="Nihal Goel — Filmmaker · Visual Artist · Installation">
+  <!-- Fixed Navigation -->
   <nav class="nav" id="main-nav">
     <a href="/" class="nav__name">Nihal Goel</a>
     <div class="nav__links">
@@ -12,16 +37,57 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     </div>
   </nav>
 
-  <div class="banner-wrapper">
-    <div class="banner" id="hero-banner">
-      <div class="banner__iframe-wrap">
+  <!-- Hero Section: Cinematic Letterbox -->
+  <section class="hero" id="hero">
+    <div class="hero__letterbox">
+      <div class="hero__video-wrap">
         <div id="yt-player"></div>
       </div>
+      <div class="hero__overlay">
+        <h1 class="hero__title">Nihal Goel</h1>
+        <p class="hero__subtitle">Filmmaker · Visual Artist</p>
+      </div>
     </div>
+    <div class="hero__scroll-prompt" id="scroll-prompt">
+      <span>Scroll</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Project Sections: Snap Scroll -->
+  <div class="projects" id="projects">
+    {projects.map((project, index) => (
+      <section class="project" id={project.id} data-index={index}>
+        <div class="project__media">
+          <div class="project__placeholder">
+            <span>{String(index + 1).padStart(2, '0')}</span>
+          </div>
+        </div>
+        <div class="project__info">
+          <span class="project__number">{String(index + 1).padStart(2, '0')}</span>
+          <h2 class="project__title">{project.title}</h2>
+          <div class="project__meta">
+            <span class="project__year">{project.year}</span>
+            <span class="project__divider">—</span>
+            <span class="project__medium">{project.medium}</span>
+          </div>
+          <p class="project__description">{project.description}</p>
+          <a href={`/work/${project.title.toLowerCase().replace(/\s+/g, '-')}`} class="project__link">
+            View Project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </section>
+    ))}
   </div>
 </HomeLayout>
 
 <style>
+  /* Navigation */
   .nav {
     position: fixed;
     top: 0;
@@ -32,17 +98,21 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     align-items: center;
     justify-content: space-between;
     padding: 1.5rem 3rem;
-    background: rgba(90, 90, 90, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(232, 228, 223, 0.08);
+    background: transparent;
+    transition: background 0.3s ease;
     opacity: 0;
     transform: translateY(-20px);
   }
 
+  .nav.scrolled {
+    background: rgba(90, 90, 90, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
   .nav__name {
     font-family: 'Barlow', Helvetica, Arial, sans-serif;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: #e8e4df;
     text-decoration: none;
@@ -63,7 +133,7 @@ import HomeLayout from '../layouts/HomeLayout.astro';
 
   .nav__link {
     font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 400;
     color: #e8e4df;
     text-decoration: none;
@@ -82,35 +152,56 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     color: #e8e4df;
   }
 
-  .banner-wrapper {
+  /* Hero Section */
+  .hero {
+    position: relative;
+    height: 100vh;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    min-height: 100vh;
-    padding-top: 80px;
-  }
-
-  .banner {
-    width: 100%;
-    aspect-ratio: 25 / 9;
+    align-items: center;
+    background: #000;
     overflow: hidden;
-    box-shadow:
-      0 -8px 16px rgba(0, 0, 0, 0.3),
-      0 8px 16px rgba(0, 0, 0, 0.3),
-      0 2px 4px rgba(0, 0, 0, 0.15);
-    background: #999;
-    opacity: 0;
-    transform: scale(0.95);
   }
 
-  .banner__iframe-wrap {
+  .hero__letterbox {
     position: relative;
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero__letterbox::before,
+  .hero__letterbox::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 12%;
+    background: #000;
+    z-index: 2;
+  }
+
+  .hero__letterbox::before {
+    top: 0;
+  }
+
+  .hero__letterbox::after {
+    bottom: 0;
+  }
+
+  .hero__video-wrap {
+    position: absolute;
+    top: 12%;
+    left: 0;
+    right: 0;
+    bottom: 12%;
     overflow: hidden;
   }
 
-  .banner__iframe-wrap :global(iframe) {
+  .hero__video-wrap :global(iframe) {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -121,15 +212,204 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     pointer-events: none;
   }
 
+  .hero__overlay {
+    position: absolute;
+    z-index: 3;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .hero__title {
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: clamp(3rem, 10vw, 7rem);
+    font-weight: 800;
+    color: #e8e4df;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin: 0;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero__subtitle {
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    font-weight: 300;
+    color: #e8e4df;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-top: 1rem;
+    opacity: 0.8;
+  }
+
+  .hero__scroll-prompt {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e8e4df;
+    opacity: 0;
+  }
+
+  .hero__scroll-prompt span {
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    opacity: 0.6;
+  }
+
+  .hero__scroll-prompt svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    animation: bounce-down 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  /* Project Sections */
+  .projects {
+    scroll-snap-type: y mandatory;
+  }
+
+  .project {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    scroll-snap-align: start;
+    background: #5a5a5a;
+  }
+
+  .project:nth-child(even) {
+    direction: rtl;
+  }
+
+  .project:nth-child(even) > * {
+    direction: ltr;
+  }
+
+  .project__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #4a4a4a;
+    overflow: hidden;
+  }
+
+  .project__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: 8rem;
+    font-weight: 800;
+    color: #e8e4df;
+    opacity: 0.05;
+  }
+
+  .project__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 6rem;
+  }
+
+  .project__number {
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 0.85rem;
+    color: #e8e4df;
+    opacity: 0.4;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+  }
+
+  .project__title {
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: #e8e4df;
+    margin: 0 0 1rem 0;
+    line-height: 1.2;
+  }
+
+  .project__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .project__year,
+  .project__medium {
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 0.9rem;
+    color: #e8e4df;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+  }
+
+  .project__divider {
+    color: #e8e4df;
+    opacity: 0.3;
+  }
+
+  .project__description {
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: #e8e4df;
+    opacity: 0.7;
+    max-width: 400px;
+    margin-bottom: 2rem;
+  }
+
+  .project__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 0.9rem;
+    color: #e8e4df;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    padding: 0.75rem 0;
+    transition: opacity 0.3s ease, gap 0.3s ease;
+  }
+
+  .project__link:hover {
+    opacity: 0.7;
+    gap: 1rem;
+    color: #e8e4df;
+  }
+
+  .project__link svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Mobile */
   @media (max-width: 768px) {
     .nav {
-      flex-direction: column;
-      gap: 0.75rem;
       padding: 1rem 1.5rem;
     }
 
     .nav__name {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
     }
 
     .nav__links {
@@ -137,15 +417,35 @@ import HomeLayout from '../layouts/HomeLayout.astro';
     }
 
     .nav__link {
-      font-size: 1rem;
+      font-size: 0.9rem;
+      min-width: auto;
     }
 
-    .banner-wrapper {
-      padding-top: 100px;
+    .hero__letterbox::before,
+    .hero__letterbox::after {
+      height: 8%;
     }
 
-    .banner {
-      aspect-ratio: 16 / 9;
+    .hero__video-wrap {
+      top: 8%;
+      bottom: 8%;
+    }
+
+    .project {
+      grid-template-columns: 1fr;
+      grid-template-rows: 50vh auto;
+    }
+
+    .project:nth-child(even) {
+      direction: ltr;
+    }
+
+    .project__info {
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .project__placeholder {
+      font-size: 5rem;
     }
   }
 </style>
@@ -156,40 +456,57 @@ import HomeLayout from '../layouts/HomeLayout.astro';
   const START_TIME = 60;
   const END_TIME = 70;
 
-  // Entrance animations
   function playEntranceAnimations() {
     const nav = document.getElementById('main-nav');
-    const banner = document.getElementById('hero-banner');
+    const heroOverlay = document.querySelector('.hero__overlay');
+    const scrollPrompt = document.getElementById('scroll-prompt');
 
-    // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReducedMotion) {
-      // Skip animations, just show elements
       if (nav) gsap.set(nav, { opacity: 1, y: 0 });
-      if (banner) gsap.set(banner, { opacity: 1, scale: 1 });
+      if (heroOverlay) gsap.set(heroOverlay, { opacity: 1, y: 0 });
+      if (scrollPrompt) gsap.set(scrollPrompt, { opacity: 1 });
       return;
     }
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    // Nav slides down and fades in
     if (nav) {
-      tl.to(nav, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-      }, 0.3);
+      tl.to(nav, { opacity: 1, y: 0, duration: 0.8 }, 0.5);
     }
 
-    // Banner scales up and fades in
-    if (banner) {
-      tl.to(banner, {
-        opacity: 1,
-        scale: 1,
-        duration: 1.2,
-      }, 0.5);
+    if (heroOverlay) {
+      tl.to(heroOverlay, { opacity: 1, y: 0, duration: 1 }, 0.8);
     }
+
+    if (scrollPrompt) {
+      tl.to(scrollPrompt, { opacity: 1, duration: 0.8 }, 1.5);
+    }
+  }
+
+  function setupScrollBehavior() {
+    const nav = document.getElementById('main-nav');
+    const hero = document.getElementById('hero');
+
+    if (!nav || !hero) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            nav.classList.remove('scrolled');
+          } else {
+            nav.classList.add('scrolled');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(hero);
+
+    document.addEventListener('astro:before-preparation', () => observer.disconnect(), { once: true });
   }
 
   function loadYTPlayer() {
@@ -247,13 +564,13 @@ import HomeLayout from '../layouts/HomeLayout.astro';
         player.seekTo(START_TIME, true);
       }
     }, 200);
-    // Clean up on navigation
     document.addEventListener('astro:before-preparation', () => clearInterval(interval), { once: true });
   }
 
   function init() {
     loadYTPlayer();
     playEntranceAnimations();
+    setupScrollBehavior();
   }
 
   init();
