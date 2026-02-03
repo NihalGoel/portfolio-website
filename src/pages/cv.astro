@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="CV — Nihal Goel">
+  <section class="cv-page" id="cv-content">
+    <div class="cv-section">
+      <h2 class="cv-heading">Education</h2>
+      <div class="cv-item">
+        <span class="cv-year">2025</span>
+        <div class="cv-details">
+          <span class="cv-title">Master of Arts in Fine Art & Design: Lens-Based Media</span>
+          <span class="cv-sub">Piet Zwart Institute, Rotterdam</span>
+        </div>
+      </div>
+      <div class="cv-item">
+        <span class="cv-year">2018</span>
+        <div class="cv-details">
+          <span class="cv-title">BSc Computer Science and Engineering</span>
+          <span class="cv-sub">Eindhoven University of Technology, Eindhoven</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cv-section">
+      <h2 class="cv-heading">Exhibitions</h2>
+      <div class="cv-item">
+        <span class="cv-year">2025</span>
+        <div class="cv-details">
+          <span class="cv-title">Exhibition Title</span>
+          <span class="cv-sub">Venue, City</span>
+        </div>
+      </div>
+      <div class="cv-item">
+        <span class="cv-year">2024</span>
+        <div class="cv-details">
+          <span class="cv-title">Exhibition Title</span>
+          <span class="cv-sub">Venue, City</span>
+        </div>
+      </div>
+      <div class="cv-item">
+        <span class="cv-year">2023</span>
+        <div class="cv-details">
+          <span class="cv-title">Exhibition Title</span>
+          <span class="cv-sub">Venue, City</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cv-page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .cv-section {
+    margin-bottom: 3rem;
+  }
+
+  .cv-heading {
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #e8e4df;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    opacity: 0.4;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(232, 228, 223, 0.1);
+  }
+
+  .cv-item {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 2rem;
+    padding: 1rem 0;
+  }
+
+  .cv-year {
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    color: #e8e4df;
+    opacity: 0.4;
+  }
+
+  .cv-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .cv-title {
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #e8e4df;
+    opacity: 0.9;
+  }
+
+  .cv-sub {
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: #e8e4df;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    .cv-page {
+      padding: 3rem 1.5rem;
+    }
+
+    .cv-item {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  function animatePage() {
+    const content = document.getElementById('cv-content');
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      if (content) gsap.set(content, { opacity: 1, y: 0 });
+      return;
+    }
+
+    if (content) {
+      gsap.to(content, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.3,
+        ease: 'power3.out',
+      });
+    }
+  }
+
+  animatePage();
+  document.addEventListener('astro:page-load', animatePage);
+</script>
