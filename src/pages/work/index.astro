@@ -1,46 +1,147 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    year: '2024',
+    title: 'Project Title One',
+    medium: 'Film, 12 min',
+    description: 'A meditation on solitude and the weight of landscape. Shot across remote locations in Iceland.',
+  },
+  {
+    year: '2023',
+    title: 'Project Title Two',
+    medium: 'Installation, Performance',
+    description: 'An immersive work exploring the thresholds between physical exertion and internal stillness.',
+  },
+  {
+    year: '2023',
+    title: 'Project Title Three',
+    medium: 'Film, 8 min',
+    description: 'Documentary exploring the relationship between body and environment through endurance.',
+  },
+  {
+    year: '2022',
+    title: 'Project Title Four',
+    medium: 'Video Installation',
+    description: 'Multi-channel installation examining perception and the passage of time.',
+  },
+];
 ---
 
 <BaseLayout title="Work — Nihal Goel">
-  <section class="work-page">
-    <h1 class="page-title" id="page-title">Work</h1>
-    <p class="page-subtitle">Coming soon</p>
+  <section class="work-page" id="work-content">
+    <div class="work-list">
+      {projects.map((project, index) => (
+        <a href={`/work/${project.title.toLowerCase().replace(/\s+/g, '-')}`} class="work-item" data-index={index}>
+          <span class="work-year">{project.year}</span>
+          <div class="work-details">
+            <h2 class="work-title">{project.title}</h2>
+            <span class="work-medium">{project.medium}</span>
+            <p class="work-description">{project.description}</p>
+          </div>
+        </a>
+      ))}
+    </div>
   </section>
 </BaseLayout>
 
 <style>
   .work-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: calc(100vh - 80px);
-    text-align: center;
-    padding: 2rem;
-  }
-
-  .page-title {
-    font-family: 'Barlow', Helvetica, Arial, sans-serif;
-    font-size: clamp(3rem, 10vw, 6rem);
-    font-weight: 800;
-    color: #e8e4df;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
     opacity: 0;
     transform: translateY(30px);
   }
 
-  .page-subtitle {
+  .work-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .work-item {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 2rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid rgba(232, 228, 223, 0.1);
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+
+  .work-item:first-child {
+    border-top: 1px solid rgba(232, 228, 223, 0.1);
+  }
+
+  .work-item:hover {
+    background: rgba(232, 228, 223, 0.03);
+  }
+
+  .work-year {
     font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
-    font-size: 1.2rem;
-    font-weight: 300;
+    font-size: 1rem;
+    color: #e8e4df;
+    opacity: 0.4;
+    padding-top: 0.2rem;
+  }
+
+  .work-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .work-title {
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #e8e4df;
+    margin: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .work-item:hover .work-title {
+    opacity: 0.8;
+  }
+
+  .work-medium {
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 0.9rem;
     color: #e8e4df;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    opacity: 0;
-    transform: translateY(20px);
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+  }
+
+  .work-description {
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #e8e4df;
+    opacity: 0.7;
+    margin: 0.5rem 0 0 0;
+    max-width: 600px;
+  }
+
+  @media (max-width: 768px) {
+    .work-page {
+      padding: 3rem 1.5rem;
+    }
+
+    .work-item {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .work-year {
+      font-size: 0.85rem;
+    }
+
+    .work-title {
+      font-size: 1.25rem;
+    }
   }
 </style>
 
@@ -48,26 +149,39 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   import gsap from 'gsap';
 
   function animatePage() {
-    const title = document.getElementById('page-title');
-    const subtitle = document.querySelector('.page-subtitle');
+    const content = document.getElementById('work-content');
+    const items = document.querySelectorAll('.work-item');
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReducedMotion) {
-      if (title) gsap.set(title, { opacity: 1, y: 0 });
-      if (subtitle) gsap.set(subtitle, { opacity: 0.5, y: 0 });
+      if (content) gsap.set(content, { opacity: 1, y: 0 });
+      items.forEach(item => gsap.set(item, { opacity: 1 }));
       return;
     }
 
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    if (title) {
-      tl.to(title, { opacity: 1, y: 0, duration: 0.8 }, 0.3);
+    if (content) {
+      gsap.to(content, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.3,
+        ease: 'power3.out',
+      });
     }
 
-    if (subtitle) {
-      tl.to(subtitle, { opacity: 0.5, y: 0, duration: 0.6 }, 0.5);
-    }
+    items.forEach((item, index) => {
+      gsap.fromTo(item,
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.6,
+          delay: 0.5 + (index * 0.1),
+          ease: 'power3.out',
+        }
+      );
+    });
   }
 
   animatePage();
