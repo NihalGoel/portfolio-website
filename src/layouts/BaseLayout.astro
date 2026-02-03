@@ -1,14 +1,10 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import Head from '../components/common/Head.astro';
-import Grain from '../components/common/Grain.astro';
 import Loader from '../components/common/Loader.astro';
-import SidePanel from '../components/nav/SidePanel.astro';
-import NavToggle from '../components/nav/NavToggle.astro';
-import CursorFollower from '../components/nav/CursorFollower.astro';
+import TopNav from '../components/nav/TopNav.astro';
 
 import '../styles/global.css';
-import '../styles/grain.css';
 import '../styles/transitions.css';
 
 interface Props {
@@ -28,13 +24,21 @@ const { title, description, image } = Astro.props;
   </head>
   <body>
     <Loader />
-    <Grain />
-    <CursorFollower />
-    <SidePanel />
-    <NavToggle />
+    <TopNav />
 
     <main class="page-content" transition:name="page-content" transition:animate="slide">
       <slot />
     </main>
   </body>
 </html>
+
+<style is:global>
+  body {
+    background-color: #5a5a5a !important;
+  }
+
+  .page-content {
+    padding-top: 80px;
+    min-height: calc(100vh - 80px);
+  }
+</style>

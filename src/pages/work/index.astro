@@ -1,36 +1,75 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProjectGrid from '../../components/gallery/ProjectGrid.astro';
-import { getCollection } from 'astro:content';
-
-const projects = await getCollection('projects');
 ---
 
-<BaseLayout title="Work — Elena Vasquez">
-  <section class="work-page container">
-    <header class="page-header">
-      <h1>Work</h1>
-      <p>Installations, sculpture, photography, and mixed media</p>
-    </header>
-    <ProjectGrid projects={projects} />
+<BaseLayout title="Work — Nihal Goel">
+  <section class="work-page">
+    <h1 class="page-title" id="page-title">Work</h1>
+    <p class="page-subtitle">Coming soon</p>
   </section>
 </BaseLayout>
 
 <style>
   .work-page {
-    padding: 8rem 0 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    text-align: center;
+    padding: 2rem;
   }
 
-  .page-header {
-    margin-bottom: 2rem;
+  .page-title {
+    font-family: 'Barlow', Helvetica, Arial, sans-serif;
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 800;
+    color: #e8e4df;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(30px);
   }
 
-  .page-header h1 {
-    margin-bottom: 0.75rem;
-  }
-
-  .page-header p {
-    font-size: 1rem;
-    opacity: 0.5;
+  .page-subtitle {
+    font-family: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: #e8e4df;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    opacity: 0;
+    transform: translateY(20px);
   }
 </style>
+
+<script>
+  import gsap from 'gsap';
+
+  function animatePage() {
+    const title = document.getElementById('page-title');
+    const subtitle = document.querySelector('.page-subtitle');
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      if (title) gsap.set(title, { opacity: 1, y: 0 });
+      if (subtitle) gsap.set(subtitle, { opacity: 0.5, y: 0 });
+      return;
+    }
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    if (title) {
+      tl.to(title, { opacity: 1, y: 0, duration: 0.8 }, 0.3);
+    }
+
+    if (subtitle) {
+      tl.to(subtitle, { opacity: 0.5, y: 0, duration: 0.6 }, 0.5);
+    }
+  }
+
+  animatePage();
+  document.addEventListener('astro:page-load', animatePage);
+</script>
